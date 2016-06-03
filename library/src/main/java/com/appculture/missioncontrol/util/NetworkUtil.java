@@ -6,7 +6,7 @@ import android.net.NetworkInfo;
 
 /**
  * Small helper for determine network connection type and status.
- * <p>
+ * <p/>
  * Created by abozic on 6/2/16.
  */
 public class NetworkUtil {
@@ -32,4 +32,11 @@ public class NetworkUtil {
         return checkNetworkConnection(context) != NetworkStatus.TYPE_NO_CONNECTION;
     }
 
+    public static boolean isConnectedOverWiFi(Context context) {
+        return checkNetworkConnection(context) == NetworkStatus.TYPE_WIFI;
+    }
+
+    public static boolean isConnectedOverMobile(Context context) {
+        return checkNetworkConnection(context) == NetworkStatus.TYPE_MOBILE;
+    }
 }
