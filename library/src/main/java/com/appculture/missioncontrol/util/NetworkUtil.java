@@ -6,13 +6,15 @@ import android.net.NetworkInfo;
 
 /**
  * Small helper for determine network connection type and status.
- * <p/>
+ * <p>
  * Created by abozic on 6/2/16.
  */
 public class NetworkUtil {
 
     public enum NetworkStatus {
-        TYPE_NO_CONNECTION, TYPE_WIFI, TYPE_MOBILE;
+        TYPE_NO_CONNECTION,
+        TYPE_WIFI,
+        TYPE_MOBILE
     }
 
     public static NetworkStatus checkNetworkConnection(Context context) {

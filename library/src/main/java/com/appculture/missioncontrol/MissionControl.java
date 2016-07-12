@@ -3,7 +3,6 @@ package com.appculture.missioncontrol;
 import java.io.IOException;
 
 import okhttp3.Call;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -31,45 +30,62 @@ public final class MissionControl {
      */
     public interface Callback {
 
-        void onSuccess();
+        void onSuccess(String responseBodyString);
 
         void onFail();
     }
 
-    private void getRemoteConfigBlocking(String url, Callback callback) {
+    public void getRemoteConfigAsync(final Callback callback) {
         if (url == null || url.isEmpty()) return;
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        httpClient.newCall(request).enqueue(new okhttp3.Callback() {
+        httpClient.newCall(generateRequest()).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+                if (callback != null) callback.onFail();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    }
-
-                    //temporary code block
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                        System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    }
-
-                    System.out.println(responseBody.string());
-                }
+                if (callback != null) callback.onSuccess(processResponseAndCloseIt(response));
             }
         });
     }
 
+    public String getRemoteConfigBlocking() {
+        if (url == null || url.isEmpty()) return null;
+
+        try {
+            Response response = httpClient.newCall(generateRequest()).execute();
+            return processResponseAndCloseIt(response);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Request generateRequest() {
+        return new Request.Builder()
+                .url(url)
+                .build();
+    }
+
+    private String processResponseAndCloseIt(Response response) {
+        if (response == null) return null;
+        try {
+            ResponseBody responseBody = response.body();
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+
+            return responseBody.string();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            response.close();
+        }
+    }
 
     private void setUrl(String remoteConfigURL) {
-
+        this.url = remoteConfigURL;
     }
 
     private static void init() {
@@ -85,6 +101,21 @@ public final class MissionControl {
     public static void launch(String remoteConfigURL) {
         init();
         instance.setUrl(remoteConfigURL);
-        instance.getRemoteConfigBlocking(remoteConfigURL, null);
+//        instance.getRemoteConfigBlocking(remoteConfigURL, new Callback() {
+//            @Override
+//            public void onSuccess(String responseBodyString) {
+//
+//            }
+//
+//            @Override
+//            public void onFail() {
+//
+//            }
+//        });
+    }
+
+    public static MissionControl getInstance() {
+        init();
+        return instance;
     }
 }

@@ -2,7 +2,7 @@ package com.appculture.missioncontrol;
 
 /**
  * Error types enumeration.
- * <p/>
+ * <p>
  * Created by abozic on 6/29/16.
  */
 public enum ErrorType {
