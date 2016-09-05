@@ -6,6 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * Config represent Local or Remote configuration available to the library to read data from.
+ * <p>
  * Created by Uki on 8/16/16.
  */
 public abstract class Config {
@@ -21,6 +23,10 @@ public abstract class Config {
         return jsonObject;
     }
 
+    public void setJsonObject(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
+    }
+
     public boolean contains(String key) {
         return getJsonObject().has(key);
     }
@@ -34,4 +40,15 @@ public abstract class Config {
 
         return -1;
     }
+
+    /**
+     * Callback used when loading Config asynchronously.
+     */
+    public interface Callback {
+
+        void onSuccess(String responseBodyString);
+
+        void onFail(ErrorType errorType);
+    }
+
 }
