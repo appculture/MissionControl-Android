@@ -1,0 +1,14 @@
+{
+    "TopColor": "#000000",
+    "BottomColor": "#4A90E2",
+    "Ready": true,
+    "CountdownDuration": 10,
+    "Abort": false,
+    "LaunchForce": 0.5,
+    "OfflineColor": "#F8E71C",
+    "ReadyColor": "#7ED321",
+    "CountdownColor": "#F5A623",
+    "LaunchedColor": "#BD10E0",
+    "FailedColor": "#D0021B",
+    "AbortedColor": "#D0021B"
+}
