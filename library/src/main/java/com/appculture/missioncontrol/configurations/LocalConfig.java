@@ -35,7 +35,7 @@ public class LocalConfig extends Config implements Config.Callback{
                     is.close();
                     jsonString = new String(buffer, "UTF-8");
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    onFail(ErrorType.INVALID_DATA);
                 }finally {
                     onSuccess(jsonString);
                 }
