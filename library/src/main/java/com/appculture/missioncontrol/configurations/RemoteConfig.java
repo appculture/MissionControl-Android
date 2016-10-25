@@ -2,8 +2,7 @@ package com.appculture.missioncontrol.configurations;
 
 import android.content.Context;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.appculture.missioncontrol.MissionControl;
 
 import java.io.IOException;
 
@@ -18,7 +17,7 @@ import okhttp3.ResponseBody;
  * <p/>
  * Created by Uki on 8/16/16.
  */
-public class RemoteConfig extends Config implements Config.Callback {
+public class RemoteConfig extends Config {
 
     private String url;
     private OkHttpClient httpClient;
@@ -32,7 +31,7 @@ public class RemoteConfig extends Config implements Config.Callback {
 
     private void initHttpClient() {
         this.httpClient = new OkHttpClient();
-        getRemoteConfigAsync(this);
+        getRemoteConfigAsync(null);
     }
 
     private void readRemoteConfig() {
@@ -40,7 +39,7 @@ public class RemoteConfig extends Config implements Config.Callback {
 
     }
 
-    public void getRemoteConfigAsync(final Callback callback) {
+    public void getRemoteConfigAsync(final MissionControl.Callback callback) {
         if (url == null || url.isEmpty()) return;
 
         httpClient.newCall(generateRequest()).enqueue(new okhttp3.Callback() {
@@ -51,7 +50,8 @@ public class RemoteConfig extends Config implements Config.Callback {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (callback != null) callback.onSuccess(processResponseAndCloseIt(response));
+                //TODO pass all parsing to upper class
+                if (callback != null) callback.onSuccess(RemoteConfig.this);
             }
         });
     }
@@ -87,20 +87,5 @@ public class RemoteConfig extends Config implements Config.Callback {
         } finally {
             response.close();
         }
-    }
-
-    @Override
-    public void onSuccess(String responseBodyString) {
-
-        try {
-            setJsonObject(new JSONObject(responseBodyString));
-        } catch (JSONException e) {
-            onFail(ErrorType.INVALID_DATA);
-        }
-    }
-
-    @Override
-    public void onFail(ErrorType errorType) {
-
     }
 }

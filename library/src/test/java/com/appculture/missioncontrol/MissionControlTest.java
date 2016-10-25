@@ -1,5 +1,8 @@
 package com.appculture.missioncontrol;
 
+import com.appculture.missioncontrol.configurations.Config;
+import com.appculture.missioncontrol.configurations.ErrorType;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +39,8 @@ public class MissionControlTest {
 
     @Test
     public void getRemoteConfigBlockingTest() {
-        String response = MissionControl.getInstance().getRemoteConfigBlocking();
+        Config config = MissionControl.getInstance().getRemoteConfigBlocking();
+        String response = config.getString("TopColor");
         assertEquals(true, response != null && !response.isEmpty());
     }
 
@@ -56,8 +60,8 @@ public class MissionControlTest {
             }
 
             @Override
-            public void onFail() {
-                lock.countDown();
+            public void onFail(ErrorType errorType) {
+
             }
         });
         lock.await();

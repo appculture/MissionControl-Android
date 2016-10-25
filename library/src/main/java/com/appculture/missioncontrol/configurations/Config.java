@@ -41,14 +41,14 @@ public abstract class Config {
         return -1;
     }
 
-    /**
-     * Callback used when loading Config asynchronously.
-     */
-    public interface Callback {
-
-        void onSuccess(String responseBodyString);
-
-        void onFail(ErrorType errorType);
+    public <T> T getValue(String key) {
+        //TODO read value from HashMap for requested key
+        T returnValue = null;
+        return returnValue;
     }
 
+    public String getString(String key) {
+        //TODO add parsing
+        return "";
+    }
 }
